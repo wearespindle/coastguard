@@ -5,31 +5,23 @@ redis:
   image: redis:2.8
   restart: always
 nginx:
-  build: Dockers/nginx
-  links:
-      - web
-  ports:
-      - "80:80"
-      - "443:443"
-  restart: always
+    build: Dockers/nginx
+    links:
+        - web
+    ports:
+        - "80:80"
+        - "443:443"
 web:
   build: Dockers/sentry
   environment:
       SECRET_KEY: 'notasecret'
       SERVER_EMAIL: 'noreply@sentry.example.com'
-      SENTRY_ADMIN_EMAIL: 'admin@example.com'
-      SENTRY_URL_PREFIX: 'https://sentry.example.com'
+      SENTRY_ADMIN_EMAIL: 'noreply@example.com'
+      SENTRY_URL_PREFIX: ''
       FORCE_SCRIPT_NAME: ''
-      EMAIL_HOST: 'postfix'
+  ports:
+      - "8080:8080"
   links:
     - postgres
     - redis
-    - postfix
   restart: always
-
-  restart: always
-postfix:
-  image: panubo/postfix
-  environment:
-     MAILNAME: 'mail.example.com'
-     MYNETWORKS: '172.17.0.0/16'
