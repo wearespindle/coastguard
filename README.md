@@ -1,5 +1,5 @@
 # coastguard
-This proovides a docker-compose setup for sentry behind nginx with peripheals installed.
+This provides a docker-compose setup for sentry behind nginx with peripheals installed.
 I made this to provide a ready to use installation of [sentry](see https://getsentry.com) behind a nginx reverse proxy and with a mailserver and postgress and reddis in place.
 
 ## Installation
