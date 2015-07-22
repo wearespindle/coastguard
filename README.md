@@ -11,7 +11,7 @@ place your certificate and key in:
 ### Change config
 All variables you need to change are in docker-compose.yml. You need to change at least:
   * SECRET_KEY
-  * SERVER_EMAIL (where emails end by sentry will appear to originate from)
+  * SERVER_EMAIL (where emails send by sentry will appear to originate from)
   * SENTRY_ADMIN_EMAIL:
   * SENTRY_URL_PREFIX: 
   
