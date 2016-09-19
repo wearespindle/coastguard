@@ -15,12 +15,17 @@ nginx:
 web:
   build: Dockers/sentry
   environment:
-      SECRET_KEY: 'notasecret'
-      SERVER_EMAIL: 'noreply@sentry.example.com'
+      SENTRY_SECRET_KEY: 'notasecret'
+      SENTRY_SERVER_EMAIL: 'noreply@sentry.example.com'
       SENTRY_ADMIN_EMAIL: 'admin@example.com'
       SENTRY_URL_PREFIX: 'https://sentry.example.com'
       FORCE_SCRIPT_NAME: ''
-      EMAIL_HOST: 'postfix'
+      SENTRY_WEB_PORT: '9000'
+      SENTRY_EMAIL_HOST: 'postfix'
+      SENTRY_DB_NAME: 'postgres'
+      SENTRY_DB_USER: 'postgres'
+      SENTRY_POSTGRES_HOST: 'postgres'
+      SENTRY_POSTGRES_PORT: '5432'
   links:
     - postgres
     - redis
@@ -31,5 +36,5 @@ web:
 postfix:
   image: panubo/postfix
   environment:
-     MAILNAME: 'mail.example.com'
+     MAILNAME: 'mail.sentry.example.com'
      MYNETWORKS: '172.17.0.0/16'
