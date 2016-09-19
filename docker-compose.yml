@@ -31,7 +31,31 @@ web:
     - redis
     - postfix
   restart: always
-
+sentrycron:
+  image: sentry_web
+  environment:
+      SENTRY_SECRET_KEY: 'notasecret'
+      SENTRY_DB_NAME: 'postgres'
+      SENTRY_DB_USER: 'postgres'
+      SENTRY_POSTGRES_HOST: 'postgres'
+      SENTRY_POSTGRES_PORT: '5432'
+  links:
+    - postgres
+    - redis
+  command: run cron
+  restart: always
+sentryworker:
+  image: sentry_web
+  environment:
+      SENTRY_SECRET_KEY: 'notasecret'
+      SENTRY_DB_NAME: 'postgres'
+      SENTRY_DB_USER: 'postgres'
+      SENTRY_POSTGRES_HOST: 'postgres'
+      SENTRY_POSTGRES_PORT: '5432'
+  links:
+    - postgres
+    - redis
+  command: run worker
   restart: always
 postfix:
   image: panubo/postfix
