@@ -16,7 +16,9 @@ All variables you need to change are in docker-compose.yml. You need to change a
   * SENTRY_URL_PREFIX: 
   
 ### start the docker
+```bash
 docker compose build
+```
 you will need to initialize the database:
   ```bash
 docker-compose run web sentry upgrade
