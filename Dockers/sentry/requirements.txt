@@ -1,1 +1,2 @@
 sentry-slack==0.5.0
+sentry-jira==0.11.1
