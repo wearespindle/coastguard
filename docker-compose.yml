@@ -47,14 +47,18 @@ sentrycron:
 sentryworker:
   image: sentry_web
   environment:
+      SENTRY_SERVER_EMAIL: 'noreply@sentry.example.com'
+      SENTRY_ADMIN_EMAIL: 'admin@example.com'
       SENTRY_SECRET_KEY: 'notasecret'
       SENTRY_DB_NAME: 'postgres'
       SENTRY_DB_USER: 'postgres'
       SENTRY_POSTGRES_HOST: 'postgres'
       SENTRY_POSTGRES_PORT: '5432'
+      SENTRY_EMAIL_HOST: 'postfix'
   links:
     - postgres
     - redis
+    - postfix
   command: run worker
   restart: always
 postfix:
