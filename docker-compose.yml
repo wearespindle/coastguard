@@ -1,21 +1,20 @@
-postgres:
-  build: Dockers/db
-  restart: always
-redis:
-  image: redis:2.8
-  restart: always
-nginx:
-  build: Dockers/nginx
-  links:
+version: '2'
+
+services:
+  nginx:
+    build: Dockers/nginx
+    depends_on:
       - web
-  ports:
+    ports:
       - "80:80"
       - "443:443"
-  restart: always
-web:
-  build: Dockers/sentry
-  environment:
-      SENTRY_SECRET_KEY: 'notasecret'
+    restart: always
+
+  web:
+    build: Dockers/sentry
+    image: sentry
+    environment:
+      SENTRY_SECRET_KEY: 'notasecretabcdefghijklmnopqrstuvwxyz0123456789'
       SENTRY_SERVER_EMAIL: 'noreply@sentry.example.com'
       SENTRY_ADMIN_EMAIL: 'admin@example.com'
       SENTRY_URL_PREFIX: 'https://sentry.example.com'
@@ -26,43 +25,57 @@ web:
       SENTRY_DB_USER: 'postgres'
       SENTRY_POSTGRES_HOST: 'postgres'
       SENTRY_POSTGRES_PORT: '5432'
-  links:
-    - postgres
-    - redis
-    - postfix
-  restart: always
-sentrycron:
-  image: sentry_web
-  environment:
-      SENTRY_SECRET_KEY: 'notasecret'
+      SENTRY_REDIS_HOST: 'redis'
+    depends_on:
+      - postgres
+      - redis
+      - postfix
+    restart: always
+
+  sentrycron:
+    image: sentry
+    environment:
+      SENTRY_SECRET_KEY: 'notasecretabcdefghijklmnopqrstuvwxyz0123456789'
       SENTRY_DB_NAME: 'postgres'
       SENTRY_DB_USER: 'postgres'
       SENTRY_POSTGRES_HOST: 'postgres'
       SENTRY_POSTGRES_PORT: '5432'
-  links:
-    - postgres
-    - redis
-  command: run cron
-  restart: always
-sentryworker:
-  image: sentry_web
-  environment:
+      SENTRY_REDIS_HOST: 'redis'
+    depends_on:
+      - postgres
+      - redis
+    command: run cron
+    restart: always
+
+  sentryworker:
+    image: sentry
+    environment:
       SENTRY_SERVER_EMAIL: 'noreply@sentry.example.com'
       SENTRY_ADMIN_EMAIL: 'admin@example.com'
-      SENTRY_SECRET_KEY: 'notasecret'
+      SENTRY_SECRET_KEY: 'notasecretabcdefghijklmnopqrstuvwxyz0123456789'
       SENTRY_DB_NAME: 'postgres'
       SENTRY_DB_USER: 'postgres'
       SENTRY_POSTGRES_HOST: 'postgres'
       SENTRY_POSTGRES_PORT: '5432'
       SENTRY_EMAIL_HOST: 'postfix'
-  links:
-    - postgres
-    - redis
-    - postfix
-  command: run worker
-  restart: always
-postfix:
-  image: panubo/postfix
-  environment:
-     MAILNAME: 'mail.sentry.example.com'
-     MYNETWORKS: '172.17.0.0/16'
+      SENTRY_REDIS_HOST: 'redis'
+    depends_on:
+      - postgres
+      - redis
+      - postfix
+    command: run worker
+    restart: always
+
+  postfix:
+    image: panubo/postfix
+    environment:
+      MAILNAME: 'mail.sentry.example.com'
+      MYNETWORKS: '172.17.0.0/16'
+
+  postgres:
+    build: Dockers/db
+    restart: always
+
+  redis:
+    image: redis:2.8
+    restart: always

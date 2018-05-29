@@ -1,4 +1,5 @@
 FROM postgres:9.3
-MAINTAINER DevhouseSpindle
 
-ADD sentry.sh /docker-entrypoint-initdb.d/
+LABEL maintainer="info@wearespindle.com"
+
+COPY sentry.sh /docker-entrypoint-initdb.d/
