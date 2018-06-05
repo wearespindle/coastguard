@@ -8,11 +8,11 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    restart: always
+    restart: unless-stopped
 
-  web:
+  base:
     build: Dockers/sentry
-    image: sentry
+    restart: unless-stopped
     environment:
       SENTRY_SECRET_KEY: 'notasecretabcdefghijklmnopqrstuvwxyz0123456789'
       SENTRY_SERVER_EMAIL: 'noreply@sentry.example.com'
@@ -26,45 +26,31 @@ services:
       SENTRY_POSTGRES_HOST: 'postgres'
       SENTRY_POSTGRES_PORT: '5432'
       SENTRY_REDIS_HOST: 'redis'
+
+  web:
+    extends: base
+    restart: unless-stopped
     depends_on:
       - postgres
       - redis
       - postfix
-    restart: always
 
-  sentrycron:
-    image: sentry
-    environment:
-      SENTRY_SECRET_KEY: 'notasecretabcdefghijklmnopqrstuvwxyz0123456789'
-      SENTRY_DB_NAME: 'postgres'
-      SENTRY_DB_USER: 'postgres'
-      SENTRY_POSTGRES_HOST: 'postgres'
-      SENTRY_POSTGRES_PORT: '5432'
-      SENTRY_REDIS_HOST: 'redis'
+  cron:
+    extends: base
+    restart: unless-stopped
     depends_on:
       - postgres
       - redis
     command: run cron
-    restart: always
 
-  sentryworker:
-    image: sentry
-    environment:
-      SENTRY_SERVER_EMAIL: 'noreply@sentry.example.com'
-      SENTRY_ADMIN_EMAIL: 'admin@example.com'
-      SENTRY_SECRET_KEY: 'notasecretabcdefghijklmnopqrstuvwxyz0123456789'
-      SENTRY_DB_NAME: 'postgres'
-      SENTRY_DB_USER: 'postgres'
-      SENTRY_POSTGRES_HOST: 'postgres'
-      SENTRY_POSTGRES_PORT: '5432'
-      SENTRY_EMAIL_HOST: 'postfix'
-      SENTRY_REDIS_HOST: 'redis'
+  worker:
+    extends: base
+    restart: unless-stopped
     depends_on:
       - postgres
       - redis
       - postfix
     command: run worker
-    restart: always
 
   postfix:
     image: panubo/postfix
@@ -73,10 +59,11 @@ services:
       MYNETWORKS: '172.17.0.0/16'
 
   postgres:
-    build: Dockers/db
-    image: sentry_postgres
-    restart: always
+    image: postgres:9.5
+    restart: unless-stopped
+    volumes:
+      - ./Dockers/db:/docker-entrypoint-initdb.d/
 
   redis:
-    image: redis:2.8
-    restart: always
+    image: redis:3.2-alpine
+    restart: unless-stopped
