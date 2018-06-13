@@ -89,7 +89,7 @@ To create a dump of the database, run this command on the instance that is runni
 
 * Copy the dumpfile to the new instance (if needed).
 * On the new instance, start a new PostgreSQL container: `docker-compose up -d postgres`.
-* Then import the dump create in the step above: `docker-compose exec postgres psql -U postgres -d postgres < postgres-dump`. Answer **NO** to this question:
+* Then import the dump create in the step above: `docker exec -i sentry_postgres_1 psql -U postgres -d postgres < postgres-dump`. Answer **NO** to this question:
 
 ```txt
 Any objects related to these content types by a foreign key will also
