@@ -20,7 +20,7 @@ Create the directory `data/sentry`: `mkdir -p data/sentry`. This is where the Se
 ### Change config
 
 Standard variables are set in the `docker-compose.yml`-file.\
-Secrets are kept in the file named `.env`, in which you need to change at least:
+Secrets are kept in the file named `base.env`, in which you need to change at least:
 
 * `SENTRY_SECRET_KEY`
 * `SENTRY_SERVER_EMAIL` (where emails send by Sentry will appear to originaly come from.)

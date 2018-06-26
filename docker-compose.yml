@@ -4,6 +4,8 @@ services:
   base:
     build: Dockers/sentry
     restart: unless-stopped
+    env_file:
+      - base.env
     environment:
       FORCE_SCRIPT_NAME: ''
       SENTRY_WEB_PORT: '9000'
