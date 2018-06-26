@@ -1,15 +1,6 @@
 version: '2'
 
 services:
-  nginx:
-    build: Dockers/nginx
-    depends_on:
-      - web
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped
-
   base:
     build: Dockers/sentry
     restart: unless-stopped
@@ -26,6 +17,8 @@ services:
       SENTRY_POSTGRES_HOST: 'postgres'
       SENTRY_POSTGRES_PORT: '5432'
       SENTRY_REDIS_HOST: 'redis'
+    volumes:
+      - ./data/sentry:/var/lib/sentry/files
 
   web:
     extends: base
@@ -34,6 +27,8 @@ services:
       - postgres
       - redis
       - postfix
+    ports:
+      - '9000:9000'
 
   cron:
     extends: base

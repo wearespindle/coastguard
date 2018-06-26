@@ -1,7 +1,9 @@
 # coastguard
 
-This repository provides a docker-compose setup for Sentry behind nginx with peripherals installed.\
-It was made to provide a ready to use installation of [Sentry](https://getsentry.com) behind a nginx reverse proxy and with a mailserver and PostgreSQL and Redis in place.
+This repository provides a docker-compose setup for Sentry.\
+It was made to provide a ready to use installation of [Sentry](https://getsentry.com) with a mailserver, PostgreSQL and Redis in place.
+
+An nginx reverse proxy with SSL-terminatiron is optional.
 
 ## Installation
 
@@ -11,14 +13,9 @@ Clone the repo from git into a directory named "sentry":
 
 `git clone git@github.com:wearespindle/coastguard.git sentry`
 
-### Install SSL certificates
+Change into the new directory: `cd sentry`.
 
-Put your certificate and key in:
-
-* `Dockers/nginx/mycert.pem`
-* `Dockers/nginx/mykey.key`
-
-If you do not need an SSL-terminating reverse proxy inside Docker-containers, replace `Dockers/nginx/nginx.conf` with `Dockers/nginx/nginx-noSSL.conf`.
+Create the directory `data/sentry`: `mkdir -p data/sentry`. This is where the Sentry-containers will share their files.
 
 ### Change config
 
@@ -74,6 +71,30 @@ docker-compose up -d
 ```
 
 You can now connect with a browser to the FQDN of the instance (or `localhost` when testing on Docker) and you're in business!
+
+## nginx
+
+If you want a Docker-based nginx reverse proxy, add these lines to a `docker-compose.override.yml`-file under "services":
+
+```yaml
+  nginx:
+    build: Dockers/nginx
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+```
+
+### Install SSL certificates
+
+Put your certificate and key in:
+
+* `Dockers/nginx/mycert.pem`
+* `Dockers/nginx/mykey.key`
+
+If you do not need an SSL-terminating reverse proxy inside Docker-containers, replace `Dockers/nginx/nginx.conf` with `Dockers/nginx/nginx-noSSL.conf`.
 
 ## Update / upgrade
 
