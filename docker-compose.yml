@@ -5,10 +5,6 @@ services:
     build: Dockers/sentry
     restart: unless-stopped
     environment:
-      SENTRY_SECRET_KEY: 'notasecretabcdefghijklmnopqrstuvwxyz0123456789'
-      SENTRY_SERVER_EMAIL: 'noreply@sentry.example.com'
-      SENTRY_ADMIN_EMAIL: 'admin@example.com'
-      SENTRY_URL_PREFIX: 'https://sentry.example.com'
       FORCE_SCRIPT_NAME: ''
       SENTRY_WEB_PORT: '9000'
       SENTRY_EMAIL_HOST: 'postfix'

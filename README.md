@@ -19,7 +19,8 @@ Create the directory `data/sentry`: `mkdir -p data/sentry`. This is where the Se
 
 ### Change config
 
-All variables you need to change are in `docker-compose.yml`. You need to change at least:
+Standard variables are set in the `docker-compose.yml`-file.\
+Secrets are kept in the file named `.env`, in which you need to change at least:
 
 * `SENTRY_SECRET_KEY`
 * `SENTRY_SERVER_EMAIL` (where emails send by Sentry will appear to originaly come from.)
@@ -110,7 +111,7 @@ To create a dump of the database, run this command on the instance that is runni
 
 * Copy the dumpfile to the new instance (if needed).
 * On the new instance, start a new PostgreSQL container: `docker-compose up -d postgres`.
-* Then import the dump create in the step above: `docker-compose exec postgres psql -U postgres -d postgres < postgres-dump`. Answer **NO** to this question:
+* Then import the dump create in the step above: `docker exec -i sentry_postgres_1 psql -U postgres -d postgres < postgres-dump`. Answer **NO** to this question:
 
 ```txt
 Any objects related to these content types by a foreign key will also

@@ -3,3 +3,4 @@ Dockers/nginx/mykey.key
 *dump*
 /data
 docker-compose.override.yml
+secrets.env
