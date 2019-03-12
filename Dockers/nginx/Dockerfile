@@ -1,4 +1,4 @@
-FROM nginx:1.13.12
+FROM nginx:1.14.2
 
 LABEL maintainer="info@wearespindle.com"
 
