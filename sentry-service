@@ -1,0 +1,55 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:     sentry
+# Required-Start:   $docker
+# Required-Stop:    $docker
+# Default-Start:    2 3 4 5
+# Default-Stop:     0 1 6
+# Short-Description:    Sentry docker-compose setup
+### END INIT INFO
+
+set -e
+
+PROJECT_NAME=sentry
+YAMLFILE=/srv/sentry/docker-compose.yml
+
+if [ ! -f /srv/sentry/docker-compose.override.yml ]; then
+  OVERRIDE=/srv/sentry/docker-compose.override.yml
+  OPTS="-f $YAMLFILE -f $OVERRIDE -p $PROJECT_NAME"
+else
+  OPTS="-f $YAMLFILE -p $PROJECT_NAME"
+fi
+
+UPOPTS="-d --no-recreate --no-build --no-deps"
+
+. /lib/lsb/init-functions
+
+case "$1" in
+    start)
+        log_daemon_msg "Starting Sentry Docker Compose" "dockercompose" || true
+        docker-compose $OPTS up $UPOPTS
+        ;;
+
+    stop)
+        log_daemon_msg "Stopping Sentry Docker Compose" "dockercompose" || true
+        docker-compose $OPTS stop
+        ;;
+
+    reload)
+        log_daemon_msg "Reloading Sentry Docker Compose" "dockercompose" || true
+        docker-compose $OPTS up $UPOPTS
+        ;;
+
+    restart)
+        docker-compose $OPTS stop
+        docker-compose $OPTS up $UPOPTS
+        ;;
+
+    *)
+        log_action_msg "Usage: /etc/init.d/sentry {start|stop|restart|reload}" || true
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,6 +1,6 @@
 Dockers/nginx/mycert.pem
 Dockers/nginx/mykey.key
 *dump*
-/data
+data/
 docker-compose.override.yml
 secrets.env
