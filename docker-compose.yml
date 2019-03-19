@@ -47,6 +47,7 @@ services:
 
   postfix:
     image: panubo/postfix
+    restart: unless-stopped
     environment:
       MAILNAME: 'mail.sentry.example.com'
       MYNETWORKS: '172.17.0.0/16'
